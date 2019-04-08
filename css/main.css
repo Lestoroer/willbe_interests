@@ -1,0 +1,148 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font: 16px Arial, sans-serif;
+}
+
+.main {
+    display: flex;
+    margin: 25px;
+    justify-content: center;
+    flex-direction: column;
+    
+    
+    align-items: center;
+}
+
+.wrapper_search {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 700px;
+}
+
+.search {
+    padding: 10px 20px;
+    /* width: 300px; */
+    border-radius: 50px;
+    font: 16px Arial, sans-serif;
+    border: 1px solid #dfe1e5;
+    margin: 0 0 30px 0;
+}
+
+.search:focus {
+    outline: none;
+}
+
+.searched_result {
+    margin: 0px 20px 0 20px;
+    position: relative;
+}
+
+.searched_result .searched_item {
+    margin: 4px 0;
+    display: flex;
+    flex-direction: row;
+}
+
+.searched_item .category {
+    position: absolute;
+    color: #0d74b1d4;
+    white-space: nowrap;
+    left: 662px;
+}
+
+.searched_item .first_lang {
+    min-width: 350px;
+    margin: 0 20px 0 0;
+}
+
+.searched_item .second_lang {
+    
+}
+
+.start_search {
+    color : #06b74d;
+    display: none;
+}
+
+.not_found {
+    color: #404040bf;
+    display: none;
+}
+
+#searched_result {
+    display: none;
+}
+
+
+/* state */
+
+
+.loading {
+    height: 10px;
+    width: 350px;
+}
+
+.main[state="loading"] .loading-dots {
+    display: block;
+}
+
+
+.main[state="start"] .start_search {
+    display: block;
+}
+
+.main[state="not_found"] .not_found {
+    display: block;
+}
+
+.main[state="success"] #searched_result {
+    display: block;
+}
+
+
+
+
+@keyframes dot-keyframes {
+    0% {
+        opacity: .4;
+        transform: scale(1, 1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.2, 1.2);
+    }
+
+    100% {
+        opacity: .4;
+        transform: scale(1, 1);
+    }
+}
+  
+.loading-dots {
+    text-align: center;
+    width: 100%;
+    display: none;
+}
+
+.loading-dots--dot {
+    animation: dot-keyframes 1.5s infinite ease-in-out;
+    background-color: #c3c2c2;
+    border-radius: 10px;
+    display: inline-block;
+    height: 6px;
+    width: 6px;
+}
+
+.loading-dots--dot:nth-child(2) {
+    animation-delay: .5s;
+}
+    
+.loading-dots--dot:nth-child(3) {
+    animation-delay: 1s;
+}
