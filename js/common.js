@@ -14,34 +14,91 @@ js.get('#search').addEventListener('input', function(event) {
     }, 200); 
 });
 
-search('Гарри поттер');
+search('Interest_');
 
+
+/** */
 js.get('#searched_result').addEventListener('click', function(event) {
-    setFocus(event.target);
+    setStatus(event.target, 'save');
 });
 
+document.addEventListener('click', function(event) {
+    setStatus(event.target, 'save');
+});
+
+
+
 window.addEventListener('keyup', function(event) {
-    if (event.code == 'Tab') {
-        let el = event.target;
-        let range = document.createRange();
-        let sel = window.getSelection();
-        range.setStart(el.childNodes[0], event.target.innerText.length);
-        range.collapse(true);
-        sel.removeAllRanges();
-        sel.addRange(range);
-        setFocus(el);
+    let el = event.target;
+    switch(event.keyCode) {
+        case 9:
+            let range = document.createRange();
+            let sel = window.getSelection();
+            range.setStart(el.childNodes[0], event.target.innerText.length);
+            range.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(range);
+            setStatus(el, 'save');
+            break;
+        case 13:
+            event.preventDefault();
+            setStatus(el, 'loading');
+            return false;
     }
 });
 
-function setFocus(target) {
+
+function setStatus(target, status) {
     // удаляем пред.
     setDefaultStatus();
 
-    // добавляем новый статус
-    let closestSearchedItem = target.closest(`.searched_item`);
-    let wrapperStatus = closestSearchedItem.querySelector('.wrapper_status');
-    js.attr(wrapperStatus, 'state', 'save');
+    set(target, status);
+
+    switch(status) {
+        case 'save':
+            //set(target, status);
+            return;
+        case 'loading':
+            //set(target, status);
+            edit(target);
+            return;
+        case 'success':
+            //set(target, status);
+            break;
+        case 'error':
+            return;
+    }
+
+    function set(target, status) {
+        let closestSearchedItem = target.closest(`.searched_item`);
+        let wrapperStatus = closestSearchedItem.querySelector('.wrapper_status');
+        js.attr(wrapperStatus, 'state', status);
+    }
+
+    function edit(target) {
+        let interest_id = js.attr(target, 'interest_id');
+        let interest_name = target.innerText;
+        if (!interest_id || 
+            !validInterest(interest_name)) return set(target, 'error');
+
+        return new Promise ( (resolve, reject) => {
+            const settings = {
+                url : `http://51.75.37.65/api/interests_edit/${interest_id}/`
+            }
+            req.patch(settings, {"name" : interest_name},(error, result) => {
+                if (error >= 400 || !result) return reject(error);
+                console.log(result)
+                resolve(result);
+                set(target, 'success');
+            });
+        }); 
+    }
+
+    function validInterest(name) {
+        return true;
+    }
 }
+
 
 function setDefaultStatus() {
     let pr_wrapper_status = js.get('#searched_result').querySelector(`.wrapper_status:not([state="hidden"]`);
@@ -95,8 +152,9 @@ function renderSearchData(searchData, text) {
 }
 
 function getSearchedItem(item) {
+    console.log(item)
     return `
-        <div class="searched_item"> 
+        <div class="searched_item" interest_id="${item.id}"> 
             <div class="category">${item.category.name}</div>
             <div class="wrapper_status" state="hidden">
                 <div class="status save">Со</div>   
@@ -105,8 +163,8 @@ function getSearchedItem(item) {
                 <div class="status error">Er</div>
             </div>
 
-            <div class="lang first_lang" contentEditable="true">${item.name}</div> 
-            <div class="lang second_lang" contentEditable="true">${item.translation.name}</div> 
+            <div class="lang first_lang" interest_id="${item.id}" contentEditable="true">${item.name}</div> 
+            <div class="lang second_lang" interest_id="${item.id}" contentEditable="true">${item.translation.name}</div> 
         </div>
     `;
 }
