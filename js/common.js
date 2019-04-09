@@ -26,25 +26,46 @@ document.addEventListener('click', function(event) {
     setStatus(event.target, 'save');
 });
 
+function log(text) {
+    console.log(text)
+}
 
+const keydown = {};
 
 window.addEventListener('keyup', function(event) {
     let el = event.target;
+
+    // cntrl+enter
+    if (keydown[13] && keydown[17]) {
+        setStatus(el, 'loading');
+        return delete keydown[event.keyCode];
+    }    
+
     switch(event.keyCode) {
         case 9:
             let range = document.createRange();
             let sel = window.getSelection();
-            range.setStart(el.childNodes[0], event.target.innerText.length);
-            range.collapse(true);
-            sel.removeAllRanges();
-            sel.addRange(range);
+            if (el.childNodes[0]) {
+                range.setStart(el.childNodes[0], event.target.innerText.length);
+                range.collapse(true);
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }
             setStatus(el, 'save');
+            if (js.hasClass(event.target, 'lang')) {
+                log('vlf');
+                event.preventDefault();
+                return false;
+            }    
+            //log(js.hasClass(event.target, 'lang'))
             break;
-        case 13:
-            event.preventDefault();
-            setStatus(el, 'loading');
-            return false;
     }
+
+    delete keydown[event.keyCode];
+});
+
+window.addEventListener('keydown', function(event) {
+    keydown[event.keyCode] = 1;
 });
 
 
@@ -71,6 +92,7 @@ function setStatus(target, status) {
 
     function set(target, status) {
         let closestSearchedItem = target.closest(`.searched_item`);
+        if (!closestSearchedItem) return;
         let wrapperStatus = closestSearchedItem.querySelector('.wrapper_status');
         js.attr(wrapperStatus, 'state', status);
     }
@@ -152,7 +174,6 @@ function renderSearchData(searchData, text) {
 }
 
 function getSearchedItem(item) {
-    console.log(item)
     return `
         <div class="searched_item" interest_id="${item.id}"> 
             <div class="category">${item.category.name}</div>
