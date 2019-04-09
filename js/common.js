@@ -6,7 +6,7 @@ let lastReq = null;
 js.get('#search').focus();
 
 js.get('#search').addEventListener('input', function(event) {
-    setState('loading');
+    setState('change');
     if (timeout) clearTimeout(timeout);
     timeout = setTimeout(() => {
         search(event.target.value);
@@ -19,11 +19,11 @@ search('Interest_');
 
 /** */
 js.get('#searched_result').addEventListener('click', function(event) {
-    setStatus(event.target, 'save');
+    setStatus(event.target, 'focus');
 });
 
 document.addEventListener('click', function(event) {
-    setStatus(event.target, 'save');
+    setStatus(event.target, 'focus');
 });
 
 function log(text) {
@@ -36,22 +36,20 @@ window.addEventListener('keyup', function(event) {
     let el = event.target;
 
     // cntrl+enter
-    if (keydown[13] && keydown[17]) {
-        setStatus(el, 'loading');
+    if (keydown[17] && keydown[13]) {
+        setStatus(el, 'change');
         return delete keydown[event.keyCode];
-    }    
+    }  
+    log(event.keyCode)
+    // cntrl+delete
+    if (keydown[17] && keydown[46]) {
+        setStatus(el, 'remove');
+        return delete keydown[event.keyCode];
+    }  
 
     switch(event.keyCode) {
         case 9:
-            let range = document.createRange();
-            let sel = window.getSelection();
-            if (el.childNodes[0]) {
-                range.setStart(el.childNodes[0], event.target.innerText.length);
-                range.collapse(true);
-                sel.removeAllRanges();
-                sel.addRange(range);
-            }
-            setStatus(el, 'save');
+            setStatus(el, 'focus');
             if (js.hasClass(event.target, 'lang')) {
                 log('vlf');
                 event.preventDefault();
@@ -76,19 +74,30 @@ function setStatus(target, status) {
     set(target, status);
 
     switch(status) {
-        case 'save':
-            //set(target, status);
+        case 'focus':
+            let range = document.createRange();
+            let sel = window.getSelection();
+            if (target.childNodes[0]) {
+                range.setStart(target.childNodes[0], target.innerText.length);
+                range.collapse(true);
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }
             return;
-        case 'loading':
-            //set(target, status);
-            edit(target);
+        case 'change':
+            change(target);
             return;
         case 'success':
-            //set(target, status);
-            break;
+            return;
+        case 'remove':
+            remove(target);
+            return;        
         case 'error':
             return;
     }
+
+    let closestSearchedItem = target.closest(`.searched_item`);
+    if (!closestSearchedItem) return;
 
     function set(target, status) {
         let closestSearchedItem = target.closest(`.searched_item`);
@@ -97,7 +106,27 @@ function setStatus(target, status) {
         js.attr(wrapperStatus, 'state', status);
     }
 
-    function edit(target) {
+    function remove(target) {
+        let interest_id = js.attr(target, 'interest_id');
+        if (!interest_id) return set(target, 'error');
+        const searched_item = target.closest('.searched_item');
+        if (!searched_item) return set(target, 'error');
+        const lang_next = searched_item.nextElementSibling.querySelector('.lang');
+        if (!lang_next) return;
+
+        return new Promise ( (resolve, reject) => {
+            const settings = {
+                url : `http://51.75.37.65/api/interests_edit/${interest_id}/`
+            }
+            req.delete(settings,(error, result) => {
+                handlerRespond(reject, resolve, error, result);
+                setStatus(lang_next, 'focus');
+                searched_item.outerHTML = '';
+            });
+        }); 
+    }
+
+    function change(target) {
         let interest_id = js.attr(target, 'interest_id');
         let interest_name = target.innerText;
         if (!interest_id || 
@@ -108,12 +137,18 @@ function setStatus(target, status) {
                 url : `http://51.75.37.65/api/interests_edit/${interest_id}/`
             }
             req.patch(settings, {"name" : interest_name},(error, result) => {
-                if (error >= 400 || !result) return reject(error);
-                console.log(result)
-                resolve(result);
-                set(target, 'success');
+                handlerRespond(reject, resolve, error, result);
             });
         }); 
+    }
+
+    function handlerRespond(reject, resolve, error, result) {
+        if (error >= 400 || !result) {
+            set(target, 'error');
+            return reject(error);
+        }    
+        resolve(result);
+        set(target, 'success');
     }
 
     function validInterest(name) {
@@ -129,7 +164,7 @@ function setDefaultStatus() {
 }
 
 async function search(text) {
-    setState('loading');
+    setState('change');
     lastReq = text;
     const searchData = await getSearchData(text);
     renderSearchData(searchData, text);

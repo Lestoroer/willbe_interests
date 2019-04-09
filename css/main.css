@@ -58,8 +58,8 @@ body {
     display: block;
 } */
 
-.searched_result .wrapper_status[state='save'] .save,
-.searched_result .wrapper_status[state='loading'] .loading,
+.searched_result .wrapper_status[state='focus'] .save,
+.searched_result .wrapper_status[state='change'] .loading,
 .searched_result .wrapper_status[state='success'] .success,
 .searched_result .wrapper_status[state='error'] .error {
     display: block;

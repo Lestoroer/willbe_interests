@@ -416,6 +416,52 @@ class Req {
 
         return xhr;
     }
+
+    delete(settings, callback, timeout) {
+
+        let url = settings.url || settings;
+        let token = settings.token || '14f050cdfaac017de82ee7d52d060cd61b79a26d';
+
+        let xhr = new XMLHttpRequest();
+
+        xhr.open('DELETE', url, true);
+        //xhr.withCredentials = true;
+        
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('Authorization', ` Token ${token}`);
+
+        if (!timeout) xhr.timeout = this._timeout;
+        else xhr.setTimeout = timeout;
+
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState !== 4) return;
+
+            if (xhr.status === 200) {
+                let response = xhr.responseText;
+                try {
+                    response = JSON.parse(response);
+                } catch (err) {
+
+                }
+
+                if (callback) callback(null, response);
+            } else if (xhr.status) {
+                if (callback) callback(xhr.status, xhr.responseText);
+            }
+        };
+
+        xhr.ontimeout = (e) => {
+            if (callback) callback(408);
+        };
+
+        xhr.onerror = () => {
+            if (callback) callback(408);
+        };
+
+        xhr.send();
+
+        return xhr;
+    }
 }
 
 const js = new Js();
