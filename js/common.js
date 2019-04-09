@@ -111,8 +111,6 @@ async function search(text) {
     lastReq = text;
     const searchData = await getSearchData(text);
     renderSearchData(searchData, text);
-
-    //js.attr(js.get('.main'), 'state', state);
 } 
 
 function getSearchData(text) {
