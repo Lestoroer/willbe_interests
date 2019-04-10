@@ -163,7 +163,10 @@ function renderSearchData(searchData, text) {
 
     let renderInfo = '';
 
-    if (interstsHTML.length == 0) setState('not_found');
+    if (interstsHTML.length == 0) {
+        setState('not_found');
+        renderInfo = getSearchedItem({category:{}, translation:{}});
+    }    
     else {
         renderInfo = interstsHTML.join('');
         setState('success');
