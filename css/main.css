@@ -17,6 +17,22 @@ body {
     align-items: center;
 }
 
+.main[state="not_found"] .searched_item .lang {
+    border-bottom: 2px solid #13aeffd4;
+}
+
+.main[state="not_found"] .searched_item .lang::after {
+    display: none;
+}
+
+.main[mode="list_interests"] .wrapper_list {
+    display: flex !important;
+}
+
+.main[mode="search_interests"] .wrapper_search {
+    display: flex !important;
+}
+
 .faq {
     /* display: flex;
     justify-content: center;
@@ -47,10 +63,14 @@ body {
 } */
 
 .wrapper_search  {
-    display: flex;
+    display: none;
     justify-content: center;
     flex-direction: column;
     width: 780px;
+}
+
+.wrapper_list {
+    display: none;
 }
 
 .search_field {
@@ -185,14 +205,6 @@ body {
     min-width: 360px;
     font: 16px Arial, sans-serif;
     border: none;
-}
-
-.main[state="not_found"] .searched_item .lang {
-    border-bottom: 2px solid #13aeffd4;
-}
-
-.main[state="not_found"] .searched_item .lang::after {
-    display: none;
 }
 
 .searched_item .lang::after {

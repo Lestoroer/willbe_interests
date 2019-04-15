@@ -17,19 +17,27 @@
 </head>
 
 <body>
-
-    <div class="main" state="start">
+    <!-- 
+        list_interests
+        search_interests
+     -->
+    <div class="main" state="start" mode="list_interests">
         
         <div class="faq">
             <!-- <div>
                 <div>hot keys срабатывают только при FOCUS на input!</div>
             </div> -->
             <div>
+                <div class="wrapper_checkbox_mode">
+                    <input type="checkbox" id="checkbox_mode">
+                    <label for="checkbox_mode">Режим поиска</label>    
+                </div>
                 <div>cntrl + shift + backspace <span class="remove">remove</span></div>
                 <div>ctrl + enter <span class="edit">edit/add</span></div>
                 <!-- <div>ctrl + shift <span class="add">добавить</span></div> -->
             </div>    
         </div>
+
         <div class="wrapper_search">
             <div class="search_field">
                 <input class="search" id="search"/>
@@ -52,12 +60,20 @@
 
         </div>
 
+        <div class="wrapper_list">
+            Лист интересесов
+
+        </div>
+
     </div>
 
 </body>
 
     <script src="js/Js.js"></script>
 
+    <script src="js/mode.js"></script>
+    <script src="js/mode-list.js"></script>
+    <script src="js/mode-search.js"></script>
     <script src="js/init.js"></script>
     <script src="js/search.js"></script>
     <script src="js/handler-interest.js"></script>

@@ -9,6 +9,18 @@ js.get('#search').addEventListener('input', function(event) {
     }, 200); 
 });
 
+js.get('#checkbox_mode').addEventListener('input', function(event) {
+    // if () {
+    //     setMode('list_interests');
+    // } else if () {
+    //     setMode('search_interests');
+    // }
+    // if (store.timeout) clearTimeout(store.timeout);
+    // store.timeout = setTimeout(() => {
+    //     search(event.target.value);
+    //     store.timeout = null;
+    // }, 200); 
+});
 
 /** */
 js.get('#searched_result').addEventListener('click', function(event) {
