@@ -19,9 +19,24 @@
 <body>
 
     <div class="main" state="start">
-
+        
+        <div class="faq">
+            <!-- <div>
+                <div>hot keys срабатывают только при FOCUS на input!</div>
+            </div> -->
+            <div>
+                <div>cntrl + shift + backspace <span class="remove">remove</span></div>
+                <div>ctrl + enter <span class="edit">edit/add</span></div>
+                <!-- <div>ctrl + shift <span class="add">добавить</span></div> -->
+            </div>    
+        </div>
         <div class="wrapper_search">
-            <input class="search" id="search"/>
+            <div class="search_field">
+                <input class="search" id="search"/>
+                <div id="button_add_new_interests" class="icon icon-plus">
+                    <span class="name"></span>
+                </div>
+            </div>
 
             <div class="searched_result">
                 <div class="loading-dots">
@@ -32,6 +47,7 @@
                 <div id="searched_result"></div>
                 <div class="start_search"> Go </div>
                 <div id="not_found" class="not_found"> Not Found..</div>
+                <!-- <div id="add_interest" class="not_found"></div> -->
             </div>
 
         </div>
@@ -42,7 +58,12 @@
 
     <script src="js/Js.js"></script>
 
+    <script src="js/init.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/handler-interest.js"></script>
+    <script src="js/hot_keys.js"></script>
     <script src="js/common.js"></script>
+    <script src="js/run.js"></script>
     
 </html>
 
