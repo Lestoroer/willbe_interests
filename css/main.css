@@ -7,6 +7,10 @@ body {
     font: 16px Arial, sans-serif;
 }
 
+input:focus {
+    outline: none;
+}
+
 .main {
     display: flex;
     margin: 25px;
@@ -25,11 +29,11 @@ body {
     display: none;
 }
 
-.main[mode="list_interests"] .wrapper_list {
+.main[mode="mode_list_interests"] .wrapper_list {
     display: flex !important;
 }
 
-.main[mode="search_interests"] .wrapper_search {
+.main[mode="mode_search"] .wrapper_search {
     display: flex !important;
 }
 
@@ -57,10 +61,9 @@ body {
     font-size: 12px;
 }
 
-/* .faq span.add {
-    color : #06b74d;
-    font-size: 12px;
-} */
+.wrapper_checkbox_mode {
+    margin: 0 0 10px 0;
+}
 
 .wrapper_search  {
     display: none;
@@ -227,11 +230,11 @@ body {
     background: #13aeffd4;
 }
 
-.searched_item .first_lang {
+.searched_item .ru_lang {
     margin: 0 20px 0 0;
 }
 
-.searched_item .second_lang {
+.searched_item .en_lang {
 }
 
 .start_search {

@@ -1,6 +1,6 @@
 const keydown = {};
 
-window.addEventListener('keyup', function(event) {
+document.addEventListener('keyup', function(event) {
     let el = event.target;
     // cntrl+enter
     if (keydown[17] && keydown[13]) {
@@ -19,6 +19,10 @@ window.addEventListener('keyup', function(event) {
         case 9:
             handlerInterest(el, 'focus');
             break;
+
+        // case 17: 
+
+        //     break;
     }
 
     delete keydown[event.keyCode];

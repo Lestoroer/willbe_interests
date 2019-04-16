@@ -13,23 +13,21 @@
     <title>Interests</title>
 
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/mode-search.css">
 
 </head>
 
 <body>
     <!-- 
-        list_interests
-        search_interests
+        mode_list_interests
+        mode_search
      -->
-    <div class="main" state="start" mode="list_interests">
+    <div class="main" state="start" mode="mode_list_interests">
         
         <div class="faq">
-            <!-- <div>
-                <div>hot keys срабатывают только при FOCUS на input!</div>
-            </div> -->
             <div>
                 <div class="wrapper_checkbox_mode">
-                    <input type="checkbox" id="checkbox_mode">
+                    <input type="checkbox" id="checkbox_mode" >
                     <label for="checkbox_mode">Режим поиска</label>    
                 </div>
                 <div>cntrl + shift + backspace <span class="remove">remove</span></div>
@@ -52,7 +50,7 @@
                     <div class="loading-dots--dot"></div>
                     <div class="loading-dots--dot"></div>
                 </div>
-                <div id="searched_result"></div>
+                <div id="searched_result" class="container_interest"></div>
                 <div class="start_search"> Go </div>
                 <div id="not_found" class="not_found"> Not Found..</div>
                 <!-- <div id="add_interest" class="not_found"></div> -->
@@ -61,7 +59,22 @@
         </div>
 
         <div class="wrapper_list">
-            Лист интересесов
+            <div class="searched_result">
+                <div class="loading-dots">
+                    <div class="loading-dots--dot"></div>
+                    <div class="loading-dots--dot"></div>
+                    <div class="loading-dots--dot"></div>
+                </div>
+                <div id="searched_result" class="container_interest"></div>
+
+                <div class="wrapper_pagination">
+                    <div class="pagination_prev">prev</div>
+                    <input id="pagination" type="number">
+                    <div class="pagination_next">next</div>
+                </div>
+                <!-- <div class="start_search"> Go </div> -->
+                <!-- <div id="not_found" class="not_found"> Not Found..</div> -->
+            </div>
 
         </div>
 
@@ -71,15 +84,17 @@
 
     <script src="js/Js.js"></script>
 
-    <script src="js/mode.js"></script>
-    <script src="js/mode-list.js"></script>
-    <script src="js/mode-search.js"></script>
+    <script src="js/modes/modes.js"></script>
+    <script src="js/modes/mode-list.js"></script>
+    <script src="js/modes/mode-search.js"></script>
+    <script src="js/popup-categories.js"></script>
+    <script src="js/interest.js"></script>
+    <script src="js/pagination.js"></script>
     <script src="js/init.js"></script>
-    <script src="js/search.js"></script>
     <script src="js/handler-interest.js"></script>
     <script src="js/hot_keys.js"></script>
     <script src="js/common.js"></script>
-    <script src="js/run.js"></script>
+    <!-- <script src="js/run.js"></script> -->
     
 </html>
 

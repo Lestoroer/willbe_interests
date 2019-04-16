@@ -4,31 +4,40 @@ const _store = {
     categories : []
 }
 
-let mode;
-
 const store = new Proxy(_store, {
     get(target, prop) {
         return target[prop];
     },
     set(target, prop, value) {
+        
 
         if (prop == 'mode') {
             switch (value) {
-                case 'list_interests':
-                    value = new ModeList();
+                case 'mode_list_interests':
+                    mode = new ModeList();
                     break;
-                case 'search_interests':
+                case 'mode_search':
                     mode = new ModeSearch();
                     break;    
             }
+            localStorage.setItem('mode', value);
         }
+
+        target[prop] = value;
 
         return true;
     }
 });
 
-getCategories();
+const pagination = new Pagination();
+const interest = new Interest();
+const popupCategories = new PopupCategories();
 
+let mode;
+getCategories();
+init();
+
+// Загружаем категории в store
 function getCategories() {
     return new Promise ( (resolve, reject) => {
         const settings = {
@@ -44,8 +53,9 @@ function getCategories() {
 }
 
 function init() {
-    let mode = js.attr(js.get('.main'), 'mode');
+
+    let mode = localStorage.getItem('mode');
+    if (!mode) mode = js.attr(js.get('.main'), 'mode');
+
     store.mode = mode;
 }
-
-init();

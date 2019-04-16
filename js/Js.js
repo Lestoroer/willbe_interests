@@ -40,7 +40,6 @@ class Js {
     // @events - имена событий.
     // @listener - обработчик.
     listen(elements, events, listener) {
-        console.log('dfdf', elements)
         if (!elements || (elements != window &&
                 elements.length != undefined && elements.length == 0))  return;
                 

@@ -2,12 +2,8 @@
 function handlerInterest(target, status, param) {
 
     // удаляем пред.
-    //if (status != 'focus') {
-        setDefaultStatus();
-        set(target, status);
-    //}    
-
-    //const interest_id = js.attr(target, 'interest_id');
+    setDefaultStatus();
+    set(target, status);   
 
     switch(status) {
         case 'focus':
@@ -60,8 +56,8 @@ function handlerInterest(target, status, param) {
     async function addNewInterest(searched_item, settings) {
         //const new_interest = document.querySelector('[interest_id="NEW"]');
         const category_id = js.attr(searched_item.querySelector('[category_id]'), 'category_id');
-        const name_first = searched_item.querySelector('.first_lang').innerText;
-        const name_second = searched_item.querySelector('.second_lang').innerText;
+        const name_first = searched_item.querySelector('.ru_lang').innerText;
+        const name_second = searched_item.querySelector('.en_lang').innerText;
 
         let name = name_first ? name_first : name_second;
         let language = name_first ? 1 : 2;
@@ -201,15 +197,14 @@ function handlerInterest(target, status, param) {
         set(target, 'success');
     }
 
+    function setDefaultStatus() {
+        let pr_wrapper_status = js.get('#searched_result').querySelector(`.wrapper_status:not([state="hidden"]`);
+        // ставим дефолтный статус hidden
+        if (pr_wrapper_status) js.attr(pr_wrapper_status, 'state', 'hidden');
+    }
+
     function validInterest(name) {
         if (!name) return false;
         return true;
     }
-}
-
-
-function setDefaultStatus() {
-    let pr_wrapper_status = js.get('#searched_result').querySelector(`.wrapper_status:not([state="hidden"]`);
-    // ставим дефолтный статус hidden
-    if (pr_wrapper_status) js.attr(pr_wrapper_status, 'state', 'hidden');
 }
