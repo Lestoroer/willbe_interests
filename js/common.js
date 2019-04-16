@@ -3,7 +3,7 @@
 /** */
 
 js.listen(js.get('.container_interest'), 'click', (event) => {
-    handlerInterest(event.target, 'focus', {event:'click'});
+    //handlerInterest(event.target, 'focus', {event:'click'});
    
     const category_list = event.target.closest('.category_list');
     const wrapper_category = event.target.closest('.wrapper_category');

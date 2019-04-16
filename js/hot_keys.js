@@ -4,14 +4,28 @@ document.addEventListener('keyup', function(event) {
     let el = event.target;
     // cntrl+enter
     if (keydown[17] && keydown[13]) {
-        if (js.attr(js.get('.main'), 'state') != 'not_found') handlerInterest(el, 'change');
+        if (js.attr(js.get('.main'), 'state') != 'not_found') handlerInterest(el, 'edit');
         else handlerInterest(el, 'add-new-interest');
-        // handlerInterest(el, 'change');
         return delete keydown[event.keyCode];
-    }  
+    } 
+    // cntrl+backspace
+    if (keydown[17] && keydown[8] && !keydown[16]) {
+        handlerInterest(el, 'remove');
+        return delete keydown[event.keyCode];
+    }
     // cntrl+shift+backspace
     if (keydown[17] && keydown[16] && keydown[8]) {
-        handlerInterest(el, 'remove');
+        handlerInterest(el, 'removeBoth');
+        return delete keydown[event.keyCode];
+    } 
+    // cntrl+i
+    if (keydown[17] && keydown[73]) {
+        handlerInterest(el, 'open-image');
+        return delete keydown[event.keyCode];
+    } 
+    // cntrl+b
+    if (keydown[17] && keydown[66]) {
+        handlerInterest(el, 'open-google');
         return delete keydown[event.keyCode];
     } 
 
@@ -19,10 +33,6 @@ document.addEventListener('keyup', function(event) {
         case 9:
             handlerInterest(el, 'focus');
             break;
-
-        // case 17: 
-
-        //     break;
     }
 
     delete keydown[event.keyCode];

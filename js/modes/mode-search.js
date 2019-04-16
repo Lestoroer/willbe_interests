@@ -12,7 +12,6 @@ class ModeSearch extends Modes {
     }
 
     setHandlers() {
-        console.log('ModeSearch')
         js.get('#search').addEventListener('input', (event) => {
             setState('change');
             if (store.timeout) clearTimeout(store.timeout);

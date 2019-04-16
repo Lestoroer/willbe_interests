@@ -61,6 +61,16 @@ input:focus {
     font-size: 12px;
 }
 
+.faq span.google {
+    color: rgba(0,0,0,.87);
+    font-size: 12px;
+}
+
+.faq span.yandex_image {
+    color: #ffbe00;
+    font-size: 12px;
+}
+
 .wrapper_checkbox_mode {
     margin: 0 0 10px 0;
 }
@@ -158,6 +168,10 @@ input:focus {
     white-space: nowrap;
     cursor: pointer;
     left: 762px;
+}
+
+.searched_item .wrapper_category[category_id=""] .category_active {
+    color: rgb(200, 80, 80);
 }
 
 .searched_item .category_list {

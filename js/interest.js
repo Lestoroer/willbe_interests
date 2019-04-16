@@ -24,12 +24,17 @@ class Interest {
     }
 
     getTemplate(item) {
-        let item_ru = item;
-        let item_en = item.translations[0] ? item.translations[0] : {};
-    
-        item_ru.id = item_ru ? item_ru.id : '';
-        item_en.id = item_en ? item_en.id : '';
-        //console.log(item_en.name)
+        let item_ru = item.language == 1 ? item : item.translations[0];
+        let item_en = item.language == 2 ? item : item.translations[0];
+
+        let item_empty = {
+            id: '',
+            name: ''
+        }
+
+        if (!item_ru) item_ru = item_empty;
+        if (!item_en) item_en = item_empty;
+
         return `
             <div class="searched_item"> 
                 <div class="wrapper_category" category_id=${item.category.id}>
@@ -62,9 +67,9 @@ class Interest {
             name: '',
             language: lang,
             category: { 
-                id: store.categories[0].id, 
-                name: store.categories[0].name
-            }, 
+                id: '', 
+                name: 'Выбрать категорию'
+            },  
             translations: [{
                 name: ''
             }]
