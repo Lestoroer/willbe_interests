@@ -12,9 +12,8 @@ function handlerInterest(target, status, param) {
 
             let range = document.createRange();
             let sel = window.getSelection();
-
+            if (target.innerText === '') return target.focus();
             if (target.childNodes[0] && js.hasClass(target, 'lang')) {
-                //console.log(js.hasClass(target, 'lang'))
                 range.setStart(target.childNodes[0], target.innerText.length);
                 range.collapse(true);
                 sel.removeAllRanges();
@@ -29,7 +28,7 @@ function handlerInterest(target, status, param) {
             edit(target);
             return;
         case 'change-category':
-            changeCategory(target);
+            changeCategory(target, param);
             return; 
         case 'save-category':
             saveCategory(param);
@@ -62,55 +61,57 @@ function handlerInterest(target, status, param) {
         js.attr(wrapperStatus, 'state', status);
     }
 
-    async function addNewInterest(searched_item, settings) {
-        //const new_interest = document.querySelector('[interest_id="NEW"]');
+    async function addNewInterest(searched_item, settings, target) {
         const category_id = js.attr(searched_item.querySelector('[category_id]'), 'category_id');
-        const name_first = searched_item.querySelector('.ru_lang').innerText;
-        const name_second = searched_item.querySelector('.en_lang').innerText;
+        const ru_lang = searched_item.querySelector('.ru_lang');
+        const en_lang = searched_item.querySelector('.en_lang');
 
-        let name = name_first ? name_first : name_second;
-        let language = name_first ? 1 : 2;
-
-        const param = {
-            name : name,
-            language : language,
-            category : { id : category_id },
+        const interest_ru = {
+            name : ru_lang.innerText,
+            language : js.attr(ru_lang, 'language'),
+            set_category : category_id
+        }
+        const interest_en = {
+            name : en_lang.innerText,
+            language : js.attr(en_lang, 'language'),
+            set_category : category_id
         }
 
+        // edit with set_translation
         if (settings && settings.set_translations) {
-            param.name = settings.name;
-            param.set_translations = [settings.id];
-            param.language = settings.language;
-        }    
- 
-        if (!validInterest(name)) return set(target, 'error');
+            return send(target, settings, true);
+        }
+        // add one or both
+        if (validInterest(interest_ru.name)) {
+            const result = await send(ru_lang, interest_ru);
 
-        const result = await send(param);
+            if (validInterest(interest_en.name)) {
+                interest_en.set_translations = [result.id];
+                return send(en_lang, interest_en, true);
+            }
 
-        if (settings && settings.set_translations) return set(target, 'success');
+            return set(target, 'success');
+        }
 
-        param.name = name_first ? name_second : name_first;
+        if (validInterest(interest_en.name)) {
+            return send(en_lang, interest_en, true);
+        }
 
-        if (!validInterest(param.name)) return set(target, 'success');
-
-        param.name = name_first ? name_second : name_first;
-        param.language = name_first ? 2 : 1;
-        param.set_translations = [result.id];
-
-        send(param);
-        set(target, 'success');;
-
-        function send(param) {
+        function send(lang, interest, sucess=false) {
             return new Promise ( (resolve, reject) => {
-                const settings = {
+                const _settings = {
                     url : `http://51.75.37.65/api/interests_edit/`
                 }
-                req.post(settings, param, (error, result) => {
+                req.post(_settings, interest, (error, result) => {
                     if (error >= 400 || !result) {
                         set(target, 'error');
                         return reject(error);
-                    }    
+                    }  
+                    js.attr(lang, 'interest_id', result.id);
+                    js.attr(searched_item.querySelector('[interest_id="NEW"]'), 'interest_id', '');
+                    
                     resolve(result);
+                    if (sucess) set(target, 'success');
                 });
             }); 
         }
@@ -118,61 +119,71 @@ function handlerInterest(target, status, param) {
     }
 
     function remove(target) {
-        console.log(target)
-        // const searched_item = target.closest('.searched_item');
-        // if (!searched_item) return set(target, 'error');
-        // const next_sibling = searched_item.nextElementSibling;
+        const interests_id = js.attr(target, 'interest_id');
 
-        // let lang_next;
-        // if (next_sibling) lang_next = searched_item.nextElementSibling.querySelector('.lang');
+        return new Promise ( (resolve, reject) => {
+            const settings = {
+                url : `http://51.75.37.65/api/interests_edit/${interests_id}/`
+            }
+            req.delete(settings,(error, result) => {
+                handlerRespond(reject, resolve, error, result);
+                handlerSuccess();
+            });
+        });
 
-        // let interests = getInterests(searched_item);
-        
-        // for (let i = 0; i < interests.length; i++) {
-        //     if (!interests[i].id || interests[i].id === 'undefined') continue;
 
-        //     new Promise ( (resolve, reject) => {
-        //         const settings = {
-        //             url : `http://51.75.37.65/api/interests_edit/${interests[i].id}/`
-        //         }
-        //         req.delete(settings,(error, result) => {
-        //             handlerRespond(reject, resolve, error, result);
+        function handlerSuccess() {
+            const searched_item = target.closest('.searched_item');
+            const opposite_item = searched_item.querySelector(`.lang:not([interest_id="${interests_id}"])`);
 
-        //             if (lang_next) handlerInterest(lang_next, 'focus');
-        //             if (searched_item) searched_item.outerHTML = '';
-
-        //         });
-        //     }); 
-        // }
+            target.innerText = '';
+            if (opposite_item.innerText === '') {
+                let lang_next = getLangNext(searched_item);
+                if (lang_next) handlerInterest(lang_next, 'focus');
+                searched_item.outerHTML = '';
+            }    
+        }
     }
 
-    function removeBoth(target) {
-        return console.log('removeBoth')
+    async function removeBoth(target) {
         const searched_item = target.closest('.searched_item');
         if (!searched_item) return set(target, 'error');
-        const next_sibling = searched_item.nextElementSibling;
 
-        let lang_next;
-        if (next_sibling) lang_next = searched_item.nextElementSibling.querySelector('.lang');
-
+        let lang_next = getLangNext(searched_item);
         let interests = getInterests(searched_item);
-        
-        for (let i = 0; i < interests.length; i++) {
-            if (!interests[i].id || interests[i].id === 'undefined') continue;
 
+        if (interests[0].id) {
+            let result = await send(interests[0].id);
+            if (interests[1].id) return send(interests[1].id, true);
+            return handlerSuccess();
+        }
+
+        if (interests[1].id) {
+            return send(interests[1].id, true);
+        }
+
+        function send(id, success=false) {
             new Promise ( (resolve, reject) => {
                 const settings = {
-                    url : `http://51.75.37.65/api/interests_edit/${interests[i].id}/`
+                    url : `http://51.75.37.65/api/interests_edit/${id}/`
                 }
-                req.delete(settings,(error, result) => {
+                req.delete(settings, (error, result) => {
                     handlerRespond(reject, resolve, error, result);
 
-                    if (lang_next) handlerInterest(lang_next, 'focus');
-                    if (searched_item) searched_item.outerHTML = '';
-
+                    if (success) handlerSuccess();
                 });
-            }); 
+            });
         }
+
+        function handlerSuccess() {
+            if (lang_next) handlerInterest(lang_next, 'focus');
+            if (searched_item) searched_item.outerHTML = '';
+        }
+    }
+
+    function getLangNext(searched_item) {
+        const next_sibling = searched_item.nextElementSibling;
+        if (next_sibling) return searched_item.nextElementSibling.querySelector('.lang');
     }
 
     function edit(target) {
@@ -183,13 +194,18 @@ function handlerInterest(target, status, param) {
         if (interest_id === "") {
             const searched_item = target.closest('.searched_item');
             const opposite_item = searched_item.querySelector(`.lang:not([interest_id=""])`);
+            const interest_id = js.attr(opposite_item, 'interest_id');
+            const wrapper_category = searched_item.querySelector(`.wrapper_category`);
+            const category_id = js.attr(wrapper_category, 'category_id');
+
             const settings = {
-                set_translations : true,
-                id : js.attr(opposite_item, 'interest_id'),
+                set_translations : [interest_id],
                 name : target.innerText,
-                language : js.attr(target, 'language')
+                language : js.attr(target, 'language'),
+                set_category: category_id
             }
-            addNewInterest(searched_item, settings);
+
+            addNewInterest(searched_item, settings, target);
             return;
         }
 
@@ -203,28 +219,28 @@ function handlerInterest(target, status, param) {
         });
     }
 
-    function changeCategory(target) {
-        const wrapper_category = target.querySelector(`.wrapper_category`);
-        const clickedCategory = target.querySelector(`[category_id="${param.category_id}"]`);
-        const category_name = clickedCategory.innerText;
-        const category_active = target.querySelector('.category_active');
-        // Устанавливаем новый category_id
+    function changeCategory(searched_item, param) {
+        const wrapper_category = searched_item.querySelector(`.wrapper_category`);
+        const category_active = searched_item.querySelector('.category_active');
         js.attr(wrapper_category, 'category_id', param.category_id);
-        // Перезаписываем название активной категории
-        category_active.innerText = category_name;
+        category_active.innerText = param.category_name;
+
+        if (js.attr(js.get('.main'), 'state' != 'not_found')) saveCategory(param);
+        handlerInterest(searched_item.querySelector('.ru_lang'), 'focus');    
+
     }
 
     function saveCategory(param) {
         for (let interest of param.interests) {
-            if (!interest.id || interest.id === 'undefined') continue;
+            if (!interest.id) continue;
             new Promise ( (resolve, reject) => {
                 const settings = {
                     url : `http://51.75.37.65/api/interests_edit/${interest.id}/`
                 }
-                req.patch(settings, {"category" : param.category_id},(error, result) => {
+                req.patch(settings, {"set_category" : param.category_id},(error, result) => {
                     handlerRespond(reject, resolve, error, result);
                 });
-            }); 
+            });
         }
     }
 

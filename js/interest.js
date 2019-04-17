@@ -32,9 +32,9 @@ class Interest {
             name: ''
         }
 
-        if (!item_ru) item_ru = item_empty;
-        if (!item_en) item_en = item_empty;
-
+        if (!item_ru || !item_ru.name) item_ru = item_empty;
+        if (!item_en || !item_en.name) item_en = item_empty;
+        console.log(item_ru);
         return `
             <div class="searched_item"> 
                 <div class="wrapper_category" category_id=${item.category.id}>
@@ -65,12 +65,13 @@ class Interest {
         const interest = {
             id: 'NEW',
             name: '',
-            language: lang,
+            language: 1,
             category: { 
                 id: '', 
                 name: 'Выбрать категорию'
             },  
             translations: [{
+                id: 'NEW',
                 name: ''
             }]
         }

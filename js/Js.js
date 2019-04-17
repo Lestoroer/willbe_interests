@@ -87,7 +87,7 @@ class Js {
     attr(elements, name, value) {
         if (!elements) return;
 
-        if (value) {
+        if (value !== undefined) {
             this._setAttr(elements, name, value);
             return;
         }

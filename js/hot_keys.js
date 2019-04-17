@@ -4,8 +4,11 @@ document.addEventListener('keyup', function(event) {
     let el = event.target;
     // cntrl+enter
     if (keydown[17] && keydown[13]) {
-        if (js.attr(js.get('.main'), 'state') != 'not_found') handlerInterest(el, 'edit');
-        else handlerInterest(el, 'add-new-interest');
+        const interest_id = js.attr(el, 'interest_id');
+        if (interest_id === 'NEW') handlerInterest(el, 'add-new-interest');
+        else handlerInterest(el, 'edit');
+
+        console.log(el)
         return delete keydown[event.keyCode];
     } 
     // cntrl+backspace
@@ -18,8 +21,8 @@ document.addEventListener('keyup', function(event) {
         handlerInterest(el, 'removeBoth');
         return delete keydown[event.keyCode];
     } 
-    // cntrl+i
-    if (keydown[17] && keydown[73]) {
+    // cntrl+t
+    if (keydown[17] && keydown[84]) {
         handlerInterest(el, 'open-image');
         return delete keydown[event.keyCode];
     } 

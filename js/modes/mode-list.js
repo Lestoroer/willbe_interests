@@ -2,7 +2,8 @@ class ModeList extends Modes {
     constructor() {
         super();
         js.attr(js.get('.main'), 'mode', 'mode_list_interests');
-        js.attr(js.get('#checkbox_mode'), 'checked', '')
+        js.removeAttr(js.get('#checkbox_mode'), 'checked');
+        
         this.loadInterests();
 
         if (!store.mode_list_interests) this.setHandlers();
@@ -18,7 +19,7 @@ class ModeList extends Modes {
         interest.renderInterests(data.results);
     }
 
-    getData(page=1, limit=10) {
+    getData(page=1, limit=75) {
         const offset = limit * (page - 1);
         return new Promise ( (resolve, reject) => {
             const settings = {

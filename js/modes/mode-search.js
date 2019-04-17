@@ -4,7 +4,7 @@ class ModeSearch extends Modes {
 
         js.attr(js.get('.main'), 'state', 'start');
         js.attr(js.get('.main'), 'mode', 'mode_search');
-        js.attr(js.get('#checkbox_mode'), 'checked', 'checked')
+        js.attr(js.get('#checkbox_mode'), 'checked', 'checked');
         js.get('#search').focus();
 
         if (!store.mode_search) this.setHandlers();
