@@ -1,6 +1,6 @@
 class Modes {
     constructor() {
-        this.saveMode();
+        //this.saveMode();
         if (store.mode) return;
 
         js.get('#checkbox_mode').addEventListener('click', function(event) {
@@ -18,7 +18,4 @@ class Modes {
         // });
     }
 
-    saveMode() {
-        console.log(this.name)
-    }
 }

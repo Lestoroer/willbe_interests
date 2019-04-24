@@ -1,6 +1,5 @@
 
 function handlerInterest(target, status, param) {
-    console.log(status)
     // удаляем пред.
     setDefaultStatus();
     set(target, status);   
@@ -61,7 +60,8 @@ function handlerInterest(target, status, param) {
         js.attr(wrapperStatus, 'state', status);
     }
 
-    async function addNewInterest(searched_item, settings, target) {
+    async function addNewInterest(searched_item) {
+        console.log('addNewInterest')
         const category_id = js.attr(searched_item.querySelector('[category_id]'), 'category_id');
         const ru_lang = searched_item.querySelector('.ru_lang');
         const en_lang = searched_item.querySelector('.en_lang');
@@ -77,45 +77,79 @@ function handlerInterest(target, status, param) {
             set_category : category_id
         }
 
-        // edit with set_translation
-        if (settings && settings.set_translations) {
-            return send(target, settings, true);
-        }
         // add one or both
         if (validInterest(interest_ru.name)) {
             const result = await send(ru_lang, interest_ru);
-
+            
             if (validInterest(interest_en.name)) {
                 interest_en.set_translations = [result.id];
                 return send(en_lang, interest_en, true);
             }
-
-            return set(target, 'success');
+            return set(searched_item, 'success');
         }
 
         if (validInterest(interest_en.name)) {
             return send(en_lang, interest_en, true);
         }
 
-        function send(lang, interest, sucess=false) {
-            return new Promise ( (resolve, reject) => {
-                const _settings = {
-                    url : `http://51.75.37.65/api/interests_edit/`
-                }
-                req.post(_settings, interest, (error, result) => {
-                    if (error >= 400 || !result) {
-                        set(target, 'error');
-                        return reject(error);
-                    }  
-                    js.attr(lang, 'interest_id', result.id);
-                    js.attr(searched_item.querySelector('[interest_id="NEW"]'), 'interest_id', '');
-                    
-                    resolve(result);
-                    if (sucess) set(target, 'success');
-                });
-            }); 
+    }
+
+    function edit(lang) {
+        console.log('edit')
+        const interest_id = js.attr(lang, 'interest_id');
+        const interest_name = lang.innerText;
+        if (!validInterest(interest_name)) return set(lang, 'error');
+
+        if (interest_id === "") return setTranslition(lang);
+
+        return new Promise ( (resolve, reject) => {
+            const settings = {
+                url : `${store.url_edit}${interest_id}/`
+            }
+            req.patch(settings, {"name" : interest_name}, (error, result) => {
+                handlerRespond(reject, resolve, error, result);
+            });
+        });
+    }
+
+    function setTranslition(lang) {
+        const searched_item = lang.closest('.searched_item');
+        const opposite_item = searched_item.querySelector(`.lang:not([interest_id=""])`);
+        const interest_id = js.attr(opposite_item, 'interest_id');
+        const wrapper_category = searched_item.querySelector(`.wrapper_category`);
+        const category_id = js.attr(wrapper_category, 'category_id');
+
+        const settings = {
+            set_translations : [interest_id],
+            name : lang.innerText,
+            language : js.attr(lang, 'language'),
+            set_category: category_id
         }
 
+        send(lang, settings, true);
+    }
+
+    function send(lang, interest, sucсess=false) {
+        return new Promise ( (resolve, reject) => {
+            const _settings = {
+                url : `${store.url_edit}`
+            }
+            req.post(_settings, interest, (error, result) => {
+                const searched_item = lang.closest('.searched_item');
+                if (error >= 400 || !result) {
+                    set(searched_item, 'error');
+                    return reject(error);
+                }
+
+                if (getState() == 'not_found') js.addClass(js.get('.wrapper_category'), 'not_active')
+
+                js.attr(lang, 'interest_id', result.id);
+                js.attr(searched_item.querySelector('[interest_id="NEW"]'), 'interest_id', '');
+                
+                resolve(result);
+                if (sucсess) set(searched_item, 'success');
+            });
+        }); 
     }
 
     function remove(target) {
@@ -123,7 +157,7 @@ function handlerInterest(target, status, param) {
 
         return new Promise ( (resolve, reject) => {
             const settings = {
-                url : `http://51.75.37.65/api/interests_edit/${interests_id}/`
+                url : `${store.url_edit}${interests_id}/`
             }
             req.delete(settings,(error, result) => {
                 handlerRespond(reject, resolve, error, result);
@@ -165,7 +199,7 @@ function handlerInterest(target, status, param) {
         function send(id, success=false) {
             new Promise ( (resolve, reject) => {
                 const settings = {
-                    url : `http://51.75.37.65/api/interests_edit/${id}/`
+                    url : `${store.url_edit}${id}/`
                 }
                 req.delete(settings, (error, result) => {
                     handlerRespond(reject, resolve, error, result);
@@ -186,46 +220,14 @@ function handlerInterest(target, status, param) {
         if (next_sibling) return searched_item.nextElementSibling.querySelector('.lang');
     }
 
-    function edit(target) {
-        const interest_id = js.attr(target, 'interest_id');
-        const interest_name = target.innerText;
-        if (!validInterest(interest_name)) return set(target, 'error');
-
-        if (interest_id === "") {
-            const searched_item = target.closest('.searched_item');
-            const opposite_item = searched_item.querySelector(`.lang:not([interest_id=""])`);
-            const interest_id = js.attr(opposite_item, 'interest_id');
-            const wrapper_category = searched_item.querySelector(`.wrapper_category`);
-            const category_id = js.attr(wrapper_category, 'category_id');
-
-            const settings = {
-                set_translations : [interest_id],
-                name : target.innerText,
-                language : js.attr(target, 'language'),
-                set_category: category_id
-            }
-
-            addNewInterest(searched_item, settings, target);
-            return;
-        }
-
-        return new Promise ( (resolve, reject) => {
-            const settings = {
-                url : `http://51.75.37.65/api/interests_edit/${interest_id}/`
-            }
-            req.patch(settings, {"name" : interest_name}, (error, result) => {
-                handlerRespond(reject, resolve, error, result);
-            });
-        });
-    }
-
     function changeCategory(searched_item, param) {
         const wrapper_category = searched_item.querySelector(`.wrapper_category`);
         const category_active = searched_item.querySelector('.category_active');
         js.attr(wrapper_category, 'category_id', param.category_id);
         category_active.innerText = param.category_name;
 
-        if (js.attr(js.get('.main'), 'state' != 'not_found')) saveCategory(param);
+        if (js.attr(js.get('.main'), 'state') != 'not_found') saveCategory(param);
+
         handlerInterest(searched_item.querySelector('.ru_lang'), 'focus');    
 
     }
@@ -235,7 +237,7 @@ function handlerInterest(target, status, param) {
             if (!interest.id) continue;
             new Promise ( (resolve, reject) => {
                 const settings = {
-                    url : `http://51.75.37.65/api/interests_edit/${interest.id}/`
+                    url : `${store.url_edit}${interest.id}/`
                 }
                 req.patch(settings, {"set_category" : param.category_id},(error, result) => {
                     handlerRespond(reject, resolve, error, result);

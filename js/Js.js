@@ -254,6 +254,7 @@ class Req {
     constructor() {
         // Время, в течение которого ждём ответ от сервера.
         this._timeout =  18000;
+        this.token = '45f7cb5abe5e7162002d8ce40c3baeae3221a094';
     }
 
     // Отправляет get-запрос.
@@ -264,7 +265,7 @@ class Req {
     get(settings, callback, timeout) {
 
         let url = settings.url || settings;
-        let token = settings.token || '14f050cdfaac017de82ee7d52d060cd61b79a26d';
+        let token = settings.token || this.token;
 
         let xhr = new XMLHttpRequest();
 
@@ -272,7 +273,8 @@ class Req {
         //xhr.withCredentials = true;
         
         xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.setRequestHeader('Authorization', ` Token ${token}`);
+        //xhr.setRequestHeader('Authorization', `${token}`);
+
 
         if (!timeout) xhr.timeout = this._timeout;
         else xhr.setTimeout = timeout;
@@ -316,11 +318,11 @@ class Req {
         let xhr = new XMLHttpRequest();
 
         let url = settings.url || settings;
-        let token = settings.token || '14f050cdfaac017de82ee7d52d060cd61b79a26d';
+        let token = settings.token || this.token;
 
         xhr.open('POST', url, true);
         //xhr.withCredentials = true;
-        xhr.setRequestHeader('Authorization', ` Token ${token}`);
+        //xhr.setRequestHeader('Authorization', `${token}`);
 
         if (!timeout) xhr.timeout = this._timeout;
         else if (timeout) xhr.setTimeout = timeout;
@@ -367,11 +369,11 @@ class Req {
         let xhr = new XMLHttpRequest();
 
         let url = settings.url || settings;
-        let token = settings.token || '14f050cdfaac017de82ee7d52d060cd61b79a26d';
+        let token = settings.token || this.token;
 
         xhr.open('PATCH', url, true);
 
-        xhr.setRequestHeader('Authorization', ` Token ${token}`);
+        //xhr.setRequestHeader('Authorization', `${token}`);
 
         if (!timeout) xhr.timeout = this._timeout;
         else if (timeout) xhr.setTimeout = timeout;
@@ -417,7 +419,7 @@ class Req {
     delete(settings, callback, timeout) {
 
         let url = settings.url || settings;
-        let token = settings.token || '14f050cdfaac017de82ee7d52d060cd61b79a26d';
+        let token = settings.token || this.token;
 
         let xhr = new XMLHttpRequest();
 
@@ -425,7 +427,7 @@ class Req {
         //xhr.withCredentials = true;
         
         xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.setRequestHeader('Authorization', ` Token ${token}`);
+        //xhr.setRequestHeader('Authorization', `${token}`);
 
         if (!timeout) xhr.timeout = this._timeout;
         else xhr.setTimeout = timeout;

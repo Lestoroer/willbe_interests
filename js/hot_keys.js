@@ -8,7 +8,6 @@ document.addEventListener('keyup', function(event) {
         if (interest_id === 'NEW') handlerInterest(el, 'add-new-interest');
         else handlerInterest(el, 'edit');
 
-        console.log(el)
         return delete keydown[event.keyCode];
     } 
     // cntrl+backspace

@@ -17,7 +17,7 @@ js.listen(js.get('.container_interest'), 'click', (event) => {
             category_id : category_id,
             category_name : category_name
         }
-  
+
         handlerInterest(searched_item, 'change-category', param);
     }
 

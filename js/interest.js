@@ -3,7 +3,8 @@ class Interest {
         
     }
 
-    renderInterests(interests) {  
+    renderInterests(interests, key) {
+
         let interestsHTML = [];
     
         for (let interest_item of interests) {
@@ -31,10 +32,10 @@ class Interest {
             id: '',
             name: ''
         }
+        
+        if (!item_ru) item_ru = item_empty;
+        if (!item_en) item_en = item_empty;
 
-        if (!item_ru || !item_ru.name) item_ru = item_empty;
-        if (!item_en || !item_en.name) item_en = item_empty;
-        console.log(item_ru);
         return `
             <div class="searched_item"> 
                 <div class="wrapper_category" category_id=${item.category.id}>
@@ -79,7 +80,8 @@ class Interest {
         if (lang == 1) interest.name = search.value;
         else if (lang == 2) interest.translations[0].name = search.value;
 
-        js.get('#searched_result').innerHTML = this.getTemplate(interest);
+        if (mode.name == 'mode_search') return mode.getResultContainer().innerHTML = this.getTemplate(interest);
+        mode.getResultContainer().innerHTML = 'Not found. Perthaps this page is not exist.'
     }
 
     _getTemplateLoading() {

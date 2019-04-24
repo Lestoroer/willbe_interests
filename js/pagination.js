@@ -25,7 +25,7 @@ class Pagination {
         js.get('#pagination').value = page;
         localStorage.setItem('page', page);
         this.page = page;
-        
+
         if (state == 'init') return; 
         mode.loadInterests(this.page);
     }

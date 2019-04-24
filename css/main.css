@@ -170,6 +170,11 @@ input:focus {
     left: 762px;
 }
 
+.searched_item .wrapper_category.not_active {
+    pointer-events:none;
+    background: rgba(0, 0, 0, 0.3);
+}
+
 .searched_item .wrapper_category[category_id=""] .category_active {
     color: rgb(200, 80, 80);
 }

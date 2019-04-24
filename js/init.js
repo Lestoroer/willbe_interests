@@ -1,7 +1,10 @@
 const _store = {
     timeout : null,
     lastReq : null,
-    categories : []
+    categories : [],
+    url_edit : 'https://willbe.io/debug.edit/',
+    url_hints : 'https://willbe.io/debug.hints/',
+    url_debug : 'https://willbe.io/debug/',
 }
 
 const store = new Proxy(_store, {
@@ -10,7 +13,6 @@ const store = new Proxy(_store, {
     },
     set(target, prop, value) {
         
-
         if (prop == 'mode') {
             switch (value) {
                 case 'mode_list_interests':
@@ -41,7 +43,7 @@ init();
 function getCategories() {
     return new Promise ( (resolve, reject) => {
         const settings = {
-            url : `http://51.75.37.65/api/categories_debug/`
+            url : `${store.url_debug}`
         }
         req.get(settings,(error, result) => {
             if (error >= 400 || !result) return reject(error);    

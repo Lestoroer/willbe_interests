@@ -9,6 +9,8 @@ class ModeSearch extends Modes {
 
         if (!store.mode_search) this.setHandlers();
         store.mode_search = true;
+
+        this.name = 'mode_search';
     }
 
     setHandlers() {
@@ -18,7 +20,7 @@ class ModeSearch extends Modes {
             store.timeout = setTimeout(() => {
                 this.search(event.target.value);
                 store.timeout = null;
-            }, 200); 
+            }, 0); 
         });
 
         js.get('#button_add_new_interests').addEventListener('click', function(event) {
@@ -38,17 +40,17 @@ class ModeSearch extends Modes {
     async search(text) {
         setState('change');
         store.lastReq = text;
-        if (store.lastReq != text) return;
-        const searchData = await this.getSearchData(text);
+        const searchData = await this.getData(text);
+        if (store.lastReq != text) return console.log('Not sync render data');
         const interests = searchData.details;
 
         interest.renderInterests(interests, text);
     }
 
-    getSearchData(text) {
+    getData(text) {
         return new Promise ( (resolve, reject) => {
             const settings = {
-                url : `http://51.75.37.65/api/interests_hints/?q=${text}`
+                url : `${store.url_hints}?q=${text}`
             }
             req.get(settings, (error, result) => {
                 if (error >= 400 || !result) return reject(error);
