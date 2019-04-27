@@ -24,7 +24,7 @@ class ModeList extends Modes {
         interest.renderInterests(data.results, page);
     }
 
-    getData(page=1, limit=75) {
+    getData(page=1, limit=100) {
         const offset = limit * (page - 1);
         return new Promise ( (resolve, reject) => {
             const settings = {

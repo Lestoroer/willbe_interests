@@ -45,14 +45,6 @@ function detectLanguage(text) {
     }
 }
 
-function getState() {
-    return js.attr(js.get('.main'), 'state');
-} 
-
-function setState(state) {
-    js.attr(js.get('.main'), 'state', state);
-} 
-
 document.addEventListener('click', function(event) {
     handlerInterest(event.target, 'focus', {event:'click'});
 
@@ -64,3 +56,5 @@ document.addEventListener('click', function(event) {
 function log(text) {
     console.log(text)
 }
+
+

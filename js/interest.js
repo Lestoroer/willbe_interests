@@ -33,8 +33,8 @@ class Interest {
             name: ''
         }
         
-        if (!item_ru) item_ru = item_empty;
-        if (!item_en) item_en = item_empty;
+        if (!item_ru || !item_ru.id) item_ru = item_empty;
+        if (!item_en || !item_en.id) item_en = item_empty;
 
         return `
             <div class="searched_item"> 

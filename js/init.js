@@ -54,10 +54,21 @@ function getCategories() {
 
 }
 
+function getState() {
+    return js.attr(js.get('.main'), 'state');
+} 
+
+function setState(state) {
+    js.attr(js.get('.main'), 'state', state);
+} 
+
+
 function init() {
 
-    let mode = localStorage.getItem('mode');
-    if (!mode) mode = js.attr(js.get('.main'), 'mode');
+    let mode_local = localStorage.getItem('mode');
+    if (!mode_local) mode_local = js.attr(js.get('.main'), 'mode');
 
-    store.mode = mode;
+    store.mode = mode_local;
+
+    mode.search('привет')
 }

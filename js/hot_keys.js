@@ -1,35 +1,32 @@
-const keydown = {};
+let keydown = {};
 
 document.addEventListener('keyup', function(event) {
     let el = event.target;
+
     // cntrl+enter
     if (keydown[17] && keydown[13]) {
         const interest_id = js.attr(el, 'interest_id');
         if (interest_id === 'NEW') handlerInterest(el, 'add-new-interest');
         else handlerInterest(el, 'edit');
-
-        return delete keydown[event.keyCode];
     } 
     // cntrl+backspace
-    if (keydown[17] && keydown[8] && !keydown[16]) {
+    if (keydown[17] && keydown[8]) {
         handlerInterest(el, 'remove');
-        return delete keydown[event.keyCode];
     }
     // cntrl+shift+backspace
     if (keydown[17] && keydown[16] && keydown[8]) {
         handlerInterest(el, 'removeBoth');
-        return delete keydown[event.keyCode];
     } 
-    // cntrl+t
-    if (keydown[17] && keydown[84]) {
+    // cntrl+shift+y
+    if (keydown[17] && keydown[16] && keydown[69]) {
         handlerInterest(el, 'open-image');
-        return delete keydown[event.keyCode];
     } 
-    // cntrl+b
-    if (keydown[17] && keydown[66]) {
+    // cntrl+shift+g
+    if (keydown[17] && keydown[16] && keydown[70]) {
         handlerInterest(el, 'open-google');
-        return delete keydown[event.keyCode];
     } 
+
+    keydown = {};
 
     switch(event.keyCode) {
         case 9:
