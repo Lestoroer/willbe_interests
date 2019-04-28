@@ -13,7 +13,11 @@ class ModeList extends Modes {
     }
 
     setHandlers() {
-        console.log('ModeList')
+        
+    }
+
+    checkoutToAddNewInterest() {
+
     }
 
     async loadInterests(page=pagination.page) {

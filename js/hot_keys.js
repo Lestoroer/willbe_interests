@@ -2,6 +2,7 @@ let keydown = {};
 
 document.addEventListener('keyup', function(event) {
     let el = event.target;
+    
 
     // cntrl+enter
     if (keydown[17] && keydown[13]) {
@@ -24,7 +25,18 @@ document.addEventListener('keyup', function(event) {
     // cntrl+shift+g
     if (keydown[17] && keydown[16] && keydown[70]) {
         handlerInterest(el, 'open-google');
+    }
+    // cntrl+shift+a
+    if (keydown[17] && keydown[16] && keydown[65]) {
+        mode.checkoutToAddNewInterest();
+    }
+    // cntrl+shift+d
+    if (keydown[17] && keydown[16] && keydown[68]) {
+        // const is_selected = 
+        // handlerInterest(el, 'edit', {is_selected : true});
     } 
+
+    console.log(event.keyCode)
 
     keydown = {};
 

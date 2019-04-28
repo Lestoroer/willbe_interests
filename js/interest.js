@@ -35,7 +35,7 @@ class Interest {
         
         if (!item_ru || !item_ru.id) item_ru = item_empty;
         if (!item_en || !item_en.id) item_en = item_empty;
-
+        console.log(item)
         return `
             <div class="searched_item"> 
                 <div class="wrapper_category" category_id=${item.category.id}>

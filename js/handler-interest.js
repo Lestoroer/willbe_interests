@@ -47,17 +47,23 @@ function handlerInterest(target, status, param) {
             openGoogle(target);
             return; 
         case 'error':
+            
             return;
     }
 
     let closestSearchedItem = target.closest(`.searched_item`);
     if (!closestSearchedItem) return;
 
-    function set(target, status) {
+    function set(target, status, error) {
         let closestSearchedItem = target.closest(`.searched_item`);
         if (!closestSearchedItem) return;
         let wrapperStatus = closestSearchedItem.querySelector('.wrapper_status');
         js.attr(wrapperStatus, 'state', status);
+        if (status == 'error') {
+            js.get('.server_error').innerText = error;
+        } else {
+            js.get('.server_error').innerText = '';
+        }
     }
 
     async function addNewInterest(searched_item) {
@@ -102,11 +108,18 @@ function handlerInterest(target, status, param) {
 
         if (interest_id === "") return setTranslition(lang);
 
+        const data = {
+            "name" : interest_name
+        }
+
+        if (param && param.is_selected) data.is_selected = param.is_selected  
+        console.log(data)
+        return;
         return new Promise ( (resolve, reject) => {
             const settings = {
                 url : `${store.url_edit}${interest_id}/`
             }
-            req.patch(settings, {"name" : interest_name}, (error, result) => {
+            req.patch(settings, data, (error, result) => {
                 handlerRespond(reject, resolve, error, result);
             });
         });
@@ -136,8 +149,8 @@ function handlerInterest(target, status, param) {
             }
             req.post(_settings, interest, (error, result) => {
                 const searched_item = lang.closest('.searched_item');
-                if (error >= 400 || !result) {
-                    set(searched_item, 'error');
+                if (error >= 400) {
+                    set(target, 'error', result.details);
                     return reject(error);
                 }
 
@@ -171,6 +184,7 @@ function handlerInterest(target, status, param) {
             const opposite_item = searched_item.querySelector(`.lang:not([interest_id="${interests_id}"])`);
 
             target.innerText = '';
+            js.attr(target, 'interest_id', '');
             if (opposite_item.innerText === '') {
                 let lang_next = getLangNext(searched_item);
                 if (lang_next) handlerInterest(lang_next, 'focus');
@@ -255,8 +269,8 @@ function handlerInterest(target, status, param) {
     }
 
     function handlerRespond(reject, resolve, error, result) {
-        if (error >= 400 /*|| !result*/) {
-            set(target, 'error');
+        if (error >= 400) {
+            set(target, 'error', result.details);
             return reject(error);
         }    
         resolve(result);

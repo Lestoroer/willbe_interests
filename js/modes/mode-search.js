@@ -23,18 +23,22 @@ class ModeSearch extends Modes {
             }, 0); 
         });
 
-        js.get('#button_add_new_interests').addEventListener('click', function(event) {
-            interest.notFound();
-        
-            let search = js.get('#search');
-            const search_value = search.value;
-            let lang = detectLanguage(search_value);
-        
-            let lang_class = lang == 1 ? `.ru_lang` : `.en_lang`;
-        
-            handlerInterest(document.querySelector(`.searched_item ${lang_class}`), 'focus');
+        js.get('#button_add_new_interests').addEventListener('click', (event) => {
+            this.checkoutToAddNewInterest();
         });  
 
+    }
+
+    checkoutToAddNewInterest() {
+        interest.notFound();
+        
+        let search = js.get('#search');
+        const search_value = search.value;
+        let lang = detectLanguage(search_value);
+    
+        let lang_class = lang == 1 ? `.ru_lang` : `.en_lang`;
+    
+        handlerInterest(document.querySelector(`.searched_item ${lang_class}`), 'focus');
     }
 
     async search(text) {

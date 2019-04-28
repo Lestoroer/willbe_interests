@@ -47,12 +47,12 @@ input:focus {
 }
 
 .faq span {
-    color: red;
+    color: #f99494;
     font-size: 12px;
 }
 
 .faq span.delete {
-    color: red;
+    color: #f99494;
     font-size: 12px;
 }
 
@@ -84,6 +84,13 @@ input:focus {
 
 .wrapper_list {
     display: none;
+}
+
+.faq .server_error {
+    margin: 50px 0 0 0;
+    color: red;
+    font-style: italic;
+    width: 250px;
 }
 
 .search_field {

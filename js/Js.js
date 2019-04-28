@@ -282,17 +282,17 @@ class Req {
         xhr.onreadystatechange = () => {
             if (xhr.readyState !== 4) return;
 
+            let response = xhr.responseText;
+            try {
+                response = JSON.parse(response);
+            } catch (err) {
+
+            }
+
             if (xhr.status === 200) {
-                let response = xhr.responseText;
-                try {
-                    response = JSON.parse(response);
-                } catch (err) {
-
-                }
-
                 if (callback) callback(null, response);
             } else if (xhr.status) {
-                if (callback) callback(xhr.status, xhr.responseText);
+                if (callback) callback(xhr.status, response);
             }
         };
 
@@ -339,16 +339,17 @@ class Req {
         xhr.onreadystatechange = () => {
             if (xhr.readyState !== 4) return;
 
-            if (xhr.status === 200 || xhr.status === 201) {
-                let response = xhr.responseText;
-                try {
-                    response = JSON.parse(response);
-                } catch (err) {
+            let response = xhr.responseText;
+            try {
+                response = JSON.parse(response);
+            } catch (err) {
 
-                }
+            }
+
+            if (xhr.status === 200) {
                 if (callback) callback(null, response);
             } else if (xhr.status) {
-                if (callback) callback(xhr.status, xhr.responseText);
+                if (callback) callback(xhr.status, response);
             }
         };
 
@@ -390,16 +391,17 @@ class Req {
         xhr.onreadystatechange = () => {
             if (xhr.readyState !== 4) return;
 
-            if (xhr.status === 200) {
-                let response = xhr.responseText;
-                try {
-                    response = JSON.parse(response);
-                } catch (err) {
+            let response = xhr.responseText;
+            try {
+                response = JSON.parse(response);
+            } catch (err) {
 
-                }
+            }
+
+            if (xhr.status === 200) {
                 if (callback) callback(null, response);
             } else if (xhr.status) {
-                if (callback) callback(xhr.status, xhr.responseText);
+                if (callback) callback(xhr.status, response);
             }
         };
 
@@ -435,17 +437,17 @@ class Req {
         xhr.onreadystatechange = () => {
             if (xhr.readyState !== 4) return;
 
+            let response = xhr.responseText;
+            try {
+                response = JSON.parse(response);
+            } catch (err) {
+
+            }
+
             if (xhr.status === 200) {
-                let response = xhr.responseText;
-                try {
-                    response = JSON.parse(response);
-                } catch (err) {
-
-                }
-
                 if (callback) callback(null, response);
             } else if (xhr.status) {
-                if (callback) callback(xhr.status, xhr.responseText);
+                if (callback) callback(xhr.status, response);
             }
         };
 
